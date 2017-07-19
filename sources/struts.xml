@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.i18n.reload" value="true"></constant>
+	<constant name="struts.configuration.xml.reload" value="true"></constant>
+	<constant name="struts.enable.DynamicMethodInvocation" value="false"></constant>
+	<constant name="struts.ui.theme" value="simple"></constant>
+	<constant name="struts.custom.i18n.resources" value="messageResource"></constant>
+	<package name="p1" namespace="/" extends="struts-default">
+		<action name="userInfo_*" class="userInfoAction" method="{1}">
+			<result type="redirect">/jsps/main.jsp</result>
+			<result name="login_error">/login.jsp</result>
+			<result name="input">/login.jsp</result>
+		</action>
+		<action name="store_*" class="storeAction" method="{1}">
+			<result name="success" type="redirectAction">store_findAll</result>
+			<result name="success_findAll">/jsps/store/store.jsp</result>
+			<result name="success_preEdit">/jsps/store/edit.jsp</result>
+			<result name="input">/jsps/store/add.jsp</result>
+			<result name="input_edit">/jsps/store/edit.jsp</result>
+		</action>
+	</package>
+
+</struts>
+
+
