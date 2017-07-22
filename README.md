@@ -1,4 +1,4 @@
 # StorageManagementSystem
-<font color="red">hello</font>
+<span style="color:red;">hello</span>
 
 <a href="#">aaa</a>
