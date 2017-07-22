@@ -55,6 +55,16 @@
 	<aop:config>
 		<aop:advisor advice-ref="txAdvice" pointcut="bean(*Service)"/>
 	</aop:config>
+	
+	<!-- ehcache config -->
+	<bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml"></property>
+	</bean>
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehCacheManager"></property>
+	</bean>
+	<cache:annotation-driven cache-manager="cacheManager"/>
+	
 	<bean id="genericDao" class="com.storage.dao.impl.GenericDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
@@ -72,4 +82,12 @@
 	<bean id="storeAction" class="com.storage.web.action.StoreAction" scope="prototype">
 		<property name="service" ref="storeService"></property>
 	</bean>
+	<!-- Goods~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<bean id="goodsService" class="com.storage.service.impl.GoodsServiceImpl">
+		<property name="dao" ref="genericDao"></property>
+	</bean>
+	<bean id="goodsAction" class="com.storage.web.action.GoodsAction" scope="prototype">
+		<property name="service" ref="goodsService"></property>
+	</bean>
+	
 </beans>

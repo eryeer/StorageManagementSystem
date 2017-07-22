@@ -5,8 +5,8 @@
 <html>
 <head>
 <title>货物统计</title>
-<link rel="stylesheet" type="text/css"
-	href="<c:url value='/css/maple.css'/>"></link>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/maple.css'/>"></link>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.3.min.js"></script>
 <style type="text/css">
 	.tx td{
 		padding:3px;
@@ -25,9 +25,19 @@
 		color:blue;
 	}
 </style>
+<script type="text/javascript">
+jQuery(function($){
+	$.get("${pageContext.request.contextPath}/store_findAllAjax",function(data){
+		$(data).each(function(){
+			$("<option value='"+this.id+"'>" + this.name + "</option>").appendTo("#store_id");
+		});
+		$("#store_id").val($("#hidden_storeid").val());
+	});
+})
+</script>
+
 </head>
 <body>
-<jsp:include page="/header/check_login.jsp"></jsp:include>
 	<table border="0" class="tx" width="100%">
 		<tr>
 			<td>当前位置&gt;&gt;首页&gt;&gt;货物库存</td>
@@ -37,7 +47,7 @@
 	<table border="0" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<td rowspan="1">
-				<form action="<c:url value='/jsps/store/remain.jsp'/>" method="post" name="select">
+				<s:form action="goods_listPage" namespace="/" method="post" name="select">
 					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="tx" align="center">
 						<colgroup>
 							<col width="20%" align="right">
@@ -53,8 +63,8 @@
 								简记码：
 							</td>
 							<td>
-								<input class="tx" type="hidden" name="id">
-								<input class="tx" type="text" name="nm" value="ASPL">
+								<input type="hidden" id="hidden_storeid" value="${store.id}"/>
+								<s:textfield name="nm" cssClass="tx"></s:textfield>
 							</td>
 						</tr>
 						<tr>
@@ -62,7 +72,7 @@
 								货物名称：
 							</td>
 							<td>
-								<input class="tx" type="text" name="name" value="阿斯匹林">
+								<s:textfield name="name" cssClass="tx"></s:textfield>
 							</td>
 						</tr>
 						<tr>
@@ -70,8 +80,8 @@
 								选择仓库：
 							</td>
 							<td>
-								<select class="tx" style="width: 120px;">
-								
+								<select id="store_id" name="store.id" class="tx" style="width: 120px;">
+									<option value="">---请选择---</option>
 								</select>
 							</td>
 						</tr>
@@ -81,7 +91,7 @@
 							</td>
 						</tr>
 					</table>
-				</form>
+				</s:form>
 			</td>
 			<td valign="top" width="20%">
 				<table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -129,48 +139,41 @@
 										<td>所在仓库</td>
 										<td>操作</td>		
 									</tr>
-									<tr>
-										<td>ThinkPad</td>
-										<td>联想笔记本</td>
-										<td>台</td>
-										<td>1000</td>
-										<td>主2号仓库</td>	
-										<td>
-											<a href="<c:url value='/jsps/save/save.jsp'/>">入库</a>
-											<a href="<c:url value='/jsps/out/out.jsp'/>">出库</a>
-											<a href="<c:url value='/jsps/his/his.jsp'/>">历史记录</a>
-										</td>		
-									</tr>
-									<tr>
-										<td>ASPL</td>
-										<td>阿斯匹林西莫先</td>
-										<td>箱</td>
-										<td>1000</td>
-										<td>主1号</td>
-										<td>
-											<a href="<c:url value='/jsps/save/save.jsp'/>">入库</a>
-											<a href="<c:url value='/jsps/out/out.jsp'/>">出库</a>
-											<a href="<c:url value='/jsps/his/his.jsp'/>">历史记录</a>
-										</td>			
-									</tr>
+									<s:iterator value="result.list">
+										<tr>
+											<td>${nm}</td>
+											<td>${name}</td>
+											<td>${unit}</td>
+											<td>${amount}</td>
+											<td>${store.name}</td>	
+											<td>
+												<a href="<c:url value='/jsps/save/save.jsp'/>">入库</a>
+												<a href="<c:url value='/jsps/out/out.jsp'/>">出库</a>
+												<a href="<c:url value='/jsps/his/his.jsp'/>">历史记录</a>
+											</td>		
+										</tr>
+									</s:iterator>
 								</table>
 							</td>
 						</tr>
 					</table>
 					<div align="right">
-						<a href="#">首页</a>
-						<a href="#">上一页</a>
-						<a href="#">[1]</a>
-						<a href="#">[2]</a>
-						<a href="#">[3]</a>
-						<a href="#">[4]</a>
-						<a href="#">[5]</a>
-						<a href="#">[6]</a>
-						<a href="#">[7]</a>
-						<a href="#">[8]</a>
-						<a href="#">[9]</a>
-						<a href="#">下一页</a>
-						<a href="#">尾页</a>
+						<s:if test="result.pageNum>1">
+							<a href="${pageContext.request.contextPath}/goods_listPage?pageNum=${result.firstPage}${result.parameterStr}">首页</a>
+							<a href="${pageContext.request.contextPath}/goods_listPage?pageNum=${result.previousPage}${result.parameterStr}">上一页</a>
+						</s:if>
+						<s:iterator value="result.pageBar" var="p">
+							<s:if test="#p==result.pageNum">
+								<font color="blue"><strong>[${p}]</strong></font>
+							</s:if>
+							<s:else>
+								<a href="${pageContext.request.contextPath}/goods_listPage?pageNum=${p}${result.parameterStr}">[${p}]</a>
+							</s:else> 
+						</s:iterator>
+						<s:if test="result.pageNum<result.pageCount">
+							<a href="${pageContext.request.contextPath}/goods_listPage?pageNum=${result.nextPage}${result.parameterStr}">下一页</a>
+							<a href="${pageContext.request.contextPath}/goods_listPage?pageNum=${result.lastPage}${result.parameterStr}">尾页</a>
+						</s:if>
 						<input type="text" size="2" name="page"/>
 						<input type="button" value="go" size="2" />
 					</div>

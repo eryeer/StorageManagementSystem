@@ -1,11 +1,64 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <title>收货登记</title>
-<link rel="stylesheet" type="text/css"
-	href="<c:url value='/css/maple.css'/>"></link>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/maple.css'/>"></link>
+<link href="${pageContext.request.contextPath}/css/smoothness/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.3.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript">
+jQuery(function($){
+	$.get("${pageContext.request.contextPath}/store_findAllAjax",function(data){
+		$(data).each(function(){
+			$("<option value='" + this.id+"'>" + this.name + "</option>").appendTo("#store_id");
+		});
+	});
+	var flag = false;
+	$("#nm_id").on("blur",function(){
+		if (!this.value) {
+			return;
+		}
+		$.post("${pageContext.request.contextPath}/goods_findGoodsAjax","nm=" + this.value, function(data){
+			if (data) {
+				$("input[name=name]").val(data.name).attr("disabled",true);
+				$("input[name=unit]").val(data.unit).attr("disabled",true);
+				$("#store_id").val(data.store.id).attr("disabled",true);
+				$("input[name=id]").val(data.id);
+				flag = true;
+			} else {
+				if (flag) {
+					$("input[name=name]").val("").removeAttr("disabled");
+					$("input[name=unit]").val("").removeAttr("disabled");
+					$("#store_id").removeAttr("disabled");
+					$("input[name=id]").val("");
+					flag = false;
+				}
+			}
+		});
+	});
+
+	$("#name_id").autocomplete({
+		source: function( request, response ) {
+			$("input[name=nm]").val("").removeAttr("disabled");
+			$("input[name=unit]").val("").removeAttr("disabled");
+			$("#store_id").removeAttr("disabled");
+			$("input[name=id]").val("");
+        	$.post("${pageContext.request.contextPath}/goods_findByNameLikeAjax",{"name":request.term},function(data){
+        		response(data);
+        	});
+        },
+   		select: function( event, ui ) {
+   			$("input[name=nm]").val(ui.item.nm).attr("disabled",true);
+			$("input[name=unit]").val(ui.item.unit).attr("disabled",true);
+			$("#store_id").val(ui.item.store.id).attr("disabled",true);
+			$("input[name=id]").val(ui.item.id);
+   		}
+	});
+});
+</script>
 <style type="text/css">
 	.tx td{
 		padding:3px;
@@ -13,7 +66,6 @@
 </style>
 </head>
 <body>
-<jsp:include page="/header/check_login.jsp"></jsp:include>
 	<!-- 中间内容（开始） -->
 	<table border="0" class="tx" width="100%">
 		<tr>
@@ -24,7 +76,7 @@
 	<table border="0" width="100%" cellpadding="0" cellspacing="0">
 		<tr valign="top">
 			<td rowspan="2">
-				<form action="<c:url value='/jsps/store/remain.jsp'/>" method="post" name="select">
+				<s:form action="goods_saveGoods" namespace="/" method="post" name="select">
 					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="tx" align="center">
 						<colgroup>
 							<col width="20%" align="right">
@@ -40,8 +92,8 @@
 								简记码：
 							</td>
 							<td>
-								<input class="tx" type="hidden" name="id">
-								<input class="tx" type="text" name="nm" value="ASPL">
+								<s:hidden name="id"></s:hidden>
+								<s:textfield name="nm" cssClass="tx" id="nm_id"></s:textfield>
 							</td>
 						</tr>
 						<tr>
@@ -49,7 +101,7 @@
 								货物名称：
 							</td>
 							<td>
-								<input class="tx" type="text" name="name" value="阿斯匹林">
+								<s:textfield name="name" cssClass="tx" id="name_id"></s:textfield>
 							</td>
 						</tr>
 						<tr>
@@ -57,7 +109,7 @@
 								计量单位：
 							</td>
 							<td>
-								<input class="tx" type="text" name="unit" value="箱">
+								<s:textfield name="unit" cssClass="tx"></s:textfield>
 							</td>
 						</tr>
 						<tr>
@@ -65,7 +117,7 @@
 								入库数量：
 							</td>
 							<td>
-								<input class="tx" type="text" name="amount"　value="1000">
+								<s:textfield name="amount" cssClass="tx"></s:textfield>
 							</td>
 						</tr>
 						<tr>
@@ -73,9 +125,7 @@
 								选择仓库：
 							</td>
 							<td>
-								<select class="tx" style="width:120px;" name="storeid">
-									
-								</select>
+								<s:select list="{}" id="store_id" name="store.id" cssStyle="width:120px;" ccsClass="tx"></s:select>
 								(此信息从数据库中加载)
 							</td>
 						</tr>
@@ -86,7 +136,7 @@
 							</td>
 						</tr>
 					</table>
-				</form>
+				</s:form>
 			</td>
 			<td valign="top" width="20%">
 				<table width="100%" border="0" cellpadding="0" cellspacing="0">

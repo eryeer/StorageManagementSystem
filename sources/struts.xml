@@ -8,18 +8,39 @@
 	<constant name="struts.enable.DynamicMethodInvocation" value="false"></constant>
 	<constant name="struts.ui.theme" value="simple"></constant>
 	<constant name="struts.custom.i18n.resources" value="messageResource"></constant>
-	<package name="p1" namespace="/" extends="struts-default">
+	<package name="p1" namespace="/" extends="json-default">
+		<interceptors>
+			<interceptor name="loginCheckInterceptor" class="com.storage.web.Interceptor.LoginCheckInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor>
+			<interceptor-stack name="myInterceptorStack">
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="loginCheckInterceptor"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myInterceptorStack"/> 
+		<global-results>
+			<result name="json" type="json"></result>
+			<result name="login">/check_login.jsp</result>
+		</global-results>
+		
 		<action name="userInfo_*" class="userInfoAction" method="{1}">
 			<result type="redirect">/jsps/main.jsp</result>
 			<result name="login_error">/login.jsp</result>
 			<result name="input">/login.jsp</result>
 		</action>
+		
 		<action name="store_*" class="storeAction" method="{1}">
 			<result name="success" type="redirectAction">store_findAll</result>
 			<result name="success_findAll">/jsps/store/store.jsp</result>
 			<result name="success_preEdit">/jsps/store/edit.jsp</result>
 			<result name="input">/jsps/store/add.jsp</result>
 			<result name="input_edit">/jsps/store/edit.jsp</result>
+		</action>
+		
+		<action name="goods_*" class="goodsAction" method="{1}">
+			<result name="success_save" type="redirect">/jsps/save/save.jsp</result>
+			<result name="success_listPage">/jsps/store/remain.jsp</result>
 		</action>
 	</package>
 

@@ -20,4 +20,9 @@ public interface GenericDao<T> {
 
 	List<T> findByCriteria(DetachedCriteria criteria);
 
+	long findCountByCriteria(DetachedCriteria criteria);
+
+	List<T> findListPageByCriteria(DetachedCriteria criteria, int beginCount,
+			int pageSize);
+
 }

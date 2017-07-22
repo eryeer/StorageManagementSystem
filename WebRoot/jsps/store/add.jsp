@@ -14,7 +14,6 @@
 </style>
 </head>
 <body>
-<jsp:include page="/header/check_login.jsp"></jsp:include>
 	<!-- 中间内容（开始） -->
 	<table border="0" class="tx" width="100%">
 		<tr>

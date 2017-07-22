@@ -35,7 +35,6 @@ jQuery(function($){
 </style>
 </head>
 <body>
-<jsp:include page="/header/check_login.jsp"></jsp:include>
 	<table border="0" class="tx" width="100%">
 		<tr>
 			<td>当前位置&gt;&gt;首页&gt;&gt;仓库管理</td>

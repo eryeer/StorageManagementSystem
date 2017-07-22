@@ -7,7 +7,6 @@
 <link href="<c:url value='/css/maple.css'/>" type="text/css" rel=stylesheet></link>
 </head>
 <BODY topMargin=0 rightMargin=0 marginwidth="0" marginheight="0">
-	<jsp:include page="/header/check_login.jsp"></jsp:include>
 	<TABLE height=91 cellSpacing=0 cellPadding=0 width=984
 		background=<c:url value='/picture/topbk.jpg'/> border=0>
 		<TBODY>
@@ -38,9 +37,9 @@
 							<TR>
 								<TD valign=middle align="center">
 									<DIV id=shouhuo>
-										<s:a target="content" id="left1002" action="store_findAll" namespace="/">[仓库管理]</s:a>
+										<s:a target="content" id="left1001" action="store_findAll" namespace="/">[仓库管理]</s:a>
 										<BR/> 
-										<A target="content" id="left1002" href="<c:url value='/jsps/store/remain.jsp'/>">[库存管理]</A>
+										<s:a target="content" id="left1002" action="goods_listPage" namespace="/">[库存管理]</s:a>
 										<BR/> 
 										<A id="left1003" target="content" href="<c:url value='/jsps/save/save.jsp'/>">[入库]</A>
 										<BR/>

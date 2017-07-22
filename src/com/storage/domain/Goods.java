@@ -3,6 +3,8 @@ package com.storage.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.struts2.json.annotations.JSON;
+
 /**
  * Goods entity. @author MyEclipse Persistence Tools
  */
@@ -86,6 +88,7 @@ public class Goods implements java.io.Serializable {
 		this.amount = amount;
 	}
 
+	@JSON(serialize = false)
 	public Set getHistories() {
 		return this.histories;
 	}
@@ -99,6 +102,15 @@ public class Goods implements java.io.Serializable {
 		return "Goods [id=" + id + ", store=" + store + ", name=" + name
 				+ ", nm=" + nm + ", unit=" + unit + ", amount=" + amount
 				+ ", histories=" + histories + "]";
+	}
+
+	// 用于jQuery ui 的下拉联想显示
+	public String getLabel() {
+		return this.name + "(" + this.store.getName() + ")";
+	}
+
+	public String getValue() {
+		return this.name;
 	}
 
 }

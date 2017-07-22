@@ -3,6 +3,8 @@ package com.storage.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.struts2.json.annotations.JSON;
+
 /**
  * Store entity. @author MyEclipse Persistence Tools
  */
@@ -65,6 +67,7 @@ public class Store implements java.io.Serializable {
 		this.manager = manager;
 	}
 
+	@JSON(serialize = false)
 	public Set getGoodses() {
 		return this.goodses;
 	}
@@ -76,7 +79,7 @@ public class Store implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "Store [id=" + id + ", name=" + name + ", addr=" + addr
-				+ ", manager=" + manager + ", goodses=" + goodses + "]";
+				+ ", manager=" + manager + "]";
 	}
 
 }

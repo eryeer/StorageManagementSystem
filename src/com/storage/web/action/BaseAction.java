@@ -23,6 +23,17 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 		return model;
 	}
 
+	protected int pageNum;
+	protected int pageSize;
+
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
 	/**
 	 * 构造方法中利用反射创建泛型T的实例
 	 */

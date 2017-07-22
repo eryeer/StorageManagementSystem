@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.storage.dao.GenericDao;
@@ -45,6 +46,21 @@ public class GenericDaoImpl<T> extends HibernateDaoSupport implements
 	@Override
 	public List<T> findByCriteria(DetachedCriteria criteria) {
 		return this.getHibernateTemplate().findByCriteria(criteria);
+	}
+
+	@Override
+	public long findCountByCriteria(DetachedCriteria criteria) {
+		criteria.setProjection(Projections.rowCount());
+		return (Long) this.getHibernateTemplate().findByCriteria(criteria)
+				.get(0);
+	}
+
+	@Override
+	public List<T> findListPageByCriteria(DetachedCriteria criteria,
+			int beginCount, int pageSize) {
+
+		return this.getHibernateTemplate().findByCriteria(criteria, beginCount,
+				pageSize);
 	}
 
 }

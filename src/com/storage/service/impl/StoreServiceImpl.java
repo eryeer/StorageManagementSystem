@@ -2,22 +2,21 @@ package com.storage.service.impl;
 
 import java.util.List;
 
-import com.storage.dao.GenericDao;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+
 import com.storage.domain.Store;
 import com.storage.service.StoreService;
 
-public class StoreServiceImpl extends BaseService implements StoreService {
-	private GenericDao<Store> dao;
-
-	public void setDao(GenericDao<Store> dao) {
-		this.dao = dao;
-	}
-
+public class StoreServiceImpl extends BaseService<Store> implements
+		StoreService {
+	@CacheEvict(value = "myCache", allEntries = true)
 	@Override
 	public void save(Store model) {
 		dao.save(model);
 	}
 
+	@Cacheable("myCache")
 	@Override
 	public List<Store> findAll() {
 		return dao.findAll(Store.class);
@@ -28,11 +27,13 @@ public class StoreServiceImpl extends BaseService implements StoreService {
 		return dao.findById(Store.class, model.getId());
 	}
 
+	@CacheEvict(value = "myCache", allEntries = true)
 	@Override
 	public void update(Store model) {
 		dao.update(model);
 	}
 
+	@CacheEvict(value = "myCache", allEntries = true)
 	@Override
 	public void delete(Store model) {
 		dao.delete(model);

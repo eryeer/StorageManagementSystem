@@ -41,4 +41,10 @@ public class StoreAction extends BaseAction<Store> {
 		service.delete(model);
 		return "success";
 	}
+
+	public String findAllAjax() {
+		List<Store> list = service.findAll();
+		this.pushToValueStackRoot(list);
+		return "json";
+	}
 }
